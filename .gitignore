@@ -1,0 +1,13 @@
+/bin
+/include
+/lib
+/pip-selfcheck.json
+# To avoid conflicts with Ansible 2.0
+/library/sts_assume_role.py
+# Ignore keys for now
+/assets/keys/dev/*
+/git
+tags
+/library/*.pyc
+/import
+/tests.sh

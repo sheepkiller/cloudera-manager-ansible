@@ -1,0 +1,59 @@
+- name: test setting
+  connection: local
+  gather_facts: no
+  hosts: localhost
+  vars:
+    cm_host: "{{ lookup('env','CM_HOST') }}"
+    cm_username: "{{ lookup('env','CM_USER') }}"
+    cm_password: "{{ lookup('env','CM_PASSWORD') }}"
+
+  tasks:
+    - name: list cloudera manager config
+      cloudera_manager_config:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        state: list
+
+    - name: check inexistant config
+      cloudera_manager_config:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        name: coucou
+        value: salut
+      ignore_errors: yes
+
+    - name: check empty config
+      cloudera_manager_config:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+      ignore_errors: yes
+
+    - name: set CUSTOM_HEADER_COLOR to... oh wait!
+      cloudera_manager_config:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        name: CUSTOM_HEADER_COLOR
+        state: present
+      ignore_errors: yes
+
+    - name: reset CUSTOM_HEADER_COLOR to Default
+      cloudera_manager_config:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        name: CUSTOM_HEADER_COLOR
+        value: BLEUE
+        state: absent
+
+    - name: set CUSTOM_HEADER_COLOR to RED
+      cloudera_manager_config:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        name: CUSTOM_HEADER_COLOR
+        state: present
+        value: RED

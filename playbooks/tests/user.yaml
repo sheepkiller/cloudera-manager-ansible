@@ -1,0 +1,74 @@
+- name: test users
+  connection: local
+  gather_facts: no
+  hosts: localhost
+
+  vars:
+    cm_host: "{{ lookup('env','CM_HOST') }}"
+    cm_username: "{{ lookup('env','CM_USER') }}"
+    cm_password: "{{ lookup('env','CM_PASSWORD') }}"
+    test_admin_user: nimda
+    test_insecure_password: insecure
+    test_user: resu
+
+  tasks:
+    - name: set user
+      cloudera_manager_user:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        name: "{{ test_admin_user }}"
+        password: "{{ test_insecure_password }}"
+        state: present
+        roles: ROLE_ADMIN
+
+    - name: list user
+      cloudera_manager_user:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        state: list
+      register: cm_users
+
+    - debug: var=cm_users
+
+    - name: update user
+      cloudera_manager_user:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        name: "{{ test_admin_user }}"
+        password: "{{ test_insecure_password }}"
+        state: present
+        roles: ROLE_USER
+      register: cm_users
+
+    - name: list user
+      cloudera_manager_user:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        state: list
+      register: cm_users
+
+    - debug: var=cm_users
+
+    - name: delete
+      cloudera_manager_user:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        name: "{{ test_admin_user }}"
+        password: "{{ test_insecure_password }}"
+        state: absent
+        roles: ROLE_USER
+      register: cm_users
+    - name: list user
+      cloudera_manager_user:
+        cm_host: "{{ cm_host }}"
+        cm_username: "{{ cm_username }}"
+        cm_password: "{{ cm_password }}"
+        state: list
+      register: cm_users
+
+    - debug: var=cm_users
