@@ -1,0 +1,8 @@
+[manager]
+node00.local
+
+[nodes]
+node00.local
+node01.local
+node02.local
+node03.local
