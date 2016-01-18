@@ -182,7 +182,7 @@ def main():
                 module.fail_json(changed=changed, msg='{}'.format(e))
     else:
         if user_exists:
-            if roles != cur_user.roles:
+            if roles != cur_user.roles or force_password_update:
                 try:
                     if not force_password_update:
                         password = None
