@@ -1,118 +1,118 @@
-# - name: configure disk
-#   hosts: nodes
-#   user: root
-#
-#   tasks:
-#     - name: create a simple data volume
-#       lvol:
-#         vg: root
-#         lv: data
-#         size: 100%FREE
-#
-#     - name:  format volume data
-#       filesystem:
-#         fstype: ext4
-#         dev: /dev/root/data
-#
-#     - name: mount data volume
-#       mount:
-#         name: /data
-#         src: /dev/root/data
-#         fstype: ext4
-#         state: mounted
-#
-#     - name: install Cloudera manager dependencies
-#       yum:
-#         name: "{{ item }}"
-#       with_items:
-#         - psmisc
-#
-# # Quick and dirty !
-#     - name: check if we need to reboot
-#       stat: path=/etc/first_update_reboot
-#       register: do_i_need_reboot
-#
-#     - name: disable SE linux
-#       selinux: state=disabled
-#
-#     - name: disable service firewalld
-#       service:
-#         name: "{{ item }}"
-#         state: stopped
-#         enabled: no
-#       with_items:
-#         - firewalld
-#
-#     - name: restart machine
-#       command: shutdown -r 1 "Ansible updates triggered"
-#       async: 0
-#       poll: 0
-#       ignore_errors: true
-#       when: do_i_need_reboot.stat.exists == False
-#
-#     - name: waiting for the boxes be up
-#       wait_for: host={{ ansible_ssh_host }} port=22 timeout ={{ 5 * 60 }} delay=90 state=started
-#       delegate_to: 127.0.0.1
-#       when: do_i_need_reboot.stat.exists == False
-#
-#     - name: balise
-#       copy:
-#          content: "done"
-#          dest: /etc/first_update_reboot
-#          mode: 0644
-#       sudo: yes
-#       when: do_i_need_reboot.stat.exists == False
-#
-# - name: bootstrap cloudera manager
-#   hosts: manager
-#   user: root
-#
-#   vars:
-#     cm_repo_url: https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo
-#     cm_repo_key_url: https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/RPM-GPG-KEY-cloudera
-#     new_password: 1nseCure
-#
-#   tasks:
-#     - name: fetch Cloudera Manager repo
-#       get_url:
-#         url: "{{ cm_repo_url }}"
-#         dest: /etc/yum.repos.d/cloudera-manager.repo
-#         checksum: sha1:ecf648e5fb8c3ce37b28ab1366fad7fe222cbfcc
-#     # XXX fix permissions
-#     - name: add cloudera manager GPG key
-#       get_url:
-#         url: https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/RPM-GPG-KEY-cloudera
-#         dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-cloudera
-#         checksum: sha1:d6ab7de2bd0fa8587c66d861499ce9e1746fe76c
-#
-#     - name: install Cloudera manager
-#       yum:
-#         name: "{{ item }}"
-#       with_items:
-#         - oracle-j2sdk1.7
-#         - cloudera-manager-server-db-2
-#         - cloudera-manager-daemons
-#         - cloudera-manager-server
-#
-#     - name: start and enable Cloudera Manager DB server
-#       service:
-#         name: cloudera-scm-server-db
-#         state: started
-#         enabled: yes
-#       register: service
-#
-#     - pause: minutes=1
-#       when: service.changed == True
-#
-#     - name: start and enable Cloudera Manager server
-#       service:
-#         name: cloudera-scm-server
-#         state: started
-#         enabled: yes
-#       register: service
-#
-#     - pause: minutes=5
-#       when: service.changed == True
+- name: configure disk
+  hosts: nodes
+  user: root
+
+  tasks:
+    - name: create a simple data volume
+      lvol:
+        vg: root
+        lv: data
+        size: 100%FREE
+
+    - name:  format volume data
+      filesystem:
+        fstype: ext4
+        dev: /dev/root/data
+
+    - name: mount data volume
+      mount:
+        name: /data
+        src: /dev/root/data
+        fstype: ext4
+        state: mounted
+
+    - name: install Cloudera manager dependencies
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - psmisc
+
+# Quick and dirty !
+    - name: check if we need to reboot
+      stat: path=/etc/first_update_reboot
+      register: do_i_need_reboot
+
+    - name: disable SE linux
+      selinux: state=disabled
+
+    - name: disable service firewalld
+      service:
+        name: "{{ item }}"
+        state: stopped
+        enabled: no
+      with_items:
+        - firewalld
+
+    - name: restart machine
+      command: shutdown -r 1 "Ansible updates triggered"
+      async: 0
+      poll: 0
+      ignore_errors: true
+      when: do_i_need_reboot.stat.exists == False
+
+    - name: waiting for the boxes be up
+      wait_for: host={{ ansible_ssh_host }} port=22 timeout ={{ 5 * 60 }} delay=90 state=started
+      delegate_to: 127.0.0.1
+      when: do_i_need_reboot.stat.exists == False
+
+    - name: balise
+      copy:
+         content: "done"
+         dest: /etc/first_update_reboot
+         mode: 0644
+      sudo: yes
+      when: do_i_need_reboot.stat.exists == False
+
+- name: bootstrap cloudera manager
+  hosts: manager
+  user: root
+
+  vars:
+    cm_repo_url: https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo
+    cm_repo_key_url: https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/RPM-GPG-KEY-cloudera
+    new_password: 1nseCure
+
+  tasks:
+    - name: fetch Cloudera Manager repo
+      get_url:
+        url: "{{ cm_repo_url }}"
+        dest: /etc/yum.repos.d/cloudera-manager.repo
+        checksum: sha1:ecf648e5fb8c3ce37b28ab1366fad7fe222cbfcc
+    # XXX fix permissions
+    - name: add cloudera manager GPG key
+      get_url:
+        url: https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/RPM-GPG-KEY-cloudera
+        dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-cloudera
+        checksum: sha1:d6ab7de2bd0fa8587c66d861499ce9e1746fe76c
+
+    - name: install Cloudera manager
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - oracle-j2sdk1.7
+        - cloudera-manager-server-db-2
+        - cloudera-manager-daemons
+        - cloudera-manager-server
+
+    - name: start and enable Cloudera Manager DB server
+      service:
+        name: cloudera-scm-server-db
+        state: started
+        enabled: yes
+      register: service
+
+    - pause: minutes=1
+      when: service.changed == True
+
+    - name: start and enable Cloudera Manager server
+      service:
+        name: cloudera-scm-server
+        state: started
+        enabled: yes
+      register: service
+
+    - pause: minutes=5
+      when: service.changed == True
 
 - name: Configure cloudera manager
   hosts: localhost
