@@ -19,5 +19,9 @@ Kudos to ansible team, you just need to add  -M <path to library> to enable modu
 You can find examples in playbooks/tests
 ### cloudera_manager_config
 Configure Cloudera Manager.
-###cloudera_manager_users
+
+### cloudera_manager_user
 Add, update or remove Cloudera Manager users.
+
+### clouder_manager_install_host [WIP]
+Deploy Cloudera Agent to host

@@ -26,6 +26,8 @@
         name: "{{ item }}"
       with_items:
         - psmisc
+    - name: set crappy root password
+      user: name=root password="$1$l743kvR7$6XQtuAp3aA/uMfBEHExQ8/"
 
 # Quick and dirty !
     - name: check if we need to reboot
@@ -142,4 +144,29 @@
         cm_password: "{{ new_password }}"
         name: ALLOW_USAGE_DATA
         state: present
-        value: false
+        value: "false"
+
+- name: Add hosts
+  hosts: nodes
+  serial: 1
+  connection: local
+  gather_facts: no
+
+  vars:
+    new_password: 1nseCure
+    cm_repo_url: https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/5
+
+  tasks:
+    - name: add hosts to clusters
+      cloudera_manager_install_host:
+        cm_host: node00.local
+        cm_username: admin
+        cm_password: "{{ new_password }}"
+        username: root
+        password: root_password
+        host: "{{ inventory_hostname }}"
+        cm_repo_url: "{{ cm_repo_url }}"
+      delegate_to: localhost
+      register: cm
+
+    - debug: var=cm
