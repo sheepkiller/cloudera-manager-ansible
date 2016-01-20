@@ -159,8 +159,9 @@ def main():
         ulist = cm_conn.get_all_users(view='export')
         for i in range(len(ulist)):
             u = dict()
-            u['username'] = ulist[i].name
-            u['roles'] = ulist[i].roles
+            for (key, value) in ulist[i].__dict__.items():
+                if isinstance(value, basestring):
+                    u[key] = value
             users_list.append(u)
         module.exit_json(changed=changed, users=users_list)
     user_exists = False
