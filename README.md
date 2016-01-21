@@ -24,4 +24,4 @@ Configure Cloudera Manager.
 Add, update or remove Cloudera Manager users.
 
 ### clouder_manager_install_host [WIP]
-Deploy Cloudera Agent to host
+Deploy Cloudera Agent to host(s). Currently only hostname are supported. If you use IP address, it may reinstall agent on this host

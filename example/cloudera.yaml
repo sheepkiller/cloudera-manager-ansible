@@ -26,7 +26,8 @@
         name: "{{ item }}"
       with_items:
         - psmisc
-    - name: set crappy root password
+
+    - name: set demo root password
       user: name=root password="$1$l743kvR7$6XQtuAp3aA/uMfBEHExQ8/"
 
 # Quick and dirty !
@@ -46,8 +47,8 @@
         - firewalld
 
     - name: restart machine
-      command: shutdown -r 1 "Ansible updates triggered"
-      async: 0
+      command: "sleep 3 ; shutdown -r now"
+      async: 1
       poll: 0
       ignore_errors: true
       when: do_i_need_reboot.stat.exists == False
@@ -164,7 +165,7 @@
         cm_password: "{{ new_password }}"
         username: root
         password: root_password
-        host: "{{ inventory_hostname }}"
+        hosts: "{{ inventory_hostname }}"
         cm_repo_url: "{{ cm_repo_url }}"
       delegate_to: localhost
       register: cm
