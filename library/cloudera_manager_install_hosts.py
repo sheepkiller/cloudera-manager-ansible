@@ -1,12 +1,12 @@
 #!/usr/bin/python
-# cloudera_manager_users: manage cloudera manager config
+# cloudera_manager_hosts: Install agents and add hosts to Cloudera Manager
 
 DOCUMENTATION = '''
 ---
-module: cloudera_manager_config
-short_description: Configure Cloudera Manager
+module: cloudera_manager_hosts
+short_description: Install agents and add hosts to Cloudera Manager
 description:
-    - Configure Cloudera Manager
+    - Install agents and add hosts to Cloudera Manager
 options:
     cm_host:
       description:

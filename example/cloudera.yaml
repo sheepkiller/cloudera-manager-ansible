@@ -159,7 +159,7 @@
 
   tasks:
     - name: add hosts to clusters
-      cloudera_manager_install_host:
+      cloudera_manager_install_hosts:
         cm_host: node00.local
         cm_username: admin
         cm_password: "{{ new_password }}"
