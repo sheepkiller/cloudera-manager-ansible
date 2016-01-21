@@ -103,7 +103,7 @@ def main():
             cm_host=dict(required=True, type='str'),
             cm_port=dict(required=False, type='int', default=7180),
             cm_username=dict(required=True, type='str'),
-            cm_password=dict(required=True, type='str'),
+            cm_password=dict(required=True, type='str', no_log=True),
             cm_tls=dict(required=False, type='bool', default=False),
             cm_version=dict(required=False, type='int', default=10),
             name=dict(required=False, type='str'),
